@@ -57,7 +57,7 @@ void parse_command(char* command){
 	return;
 }
 
-static void communication_task(){
+void communication_task(){
     const uint8_t buffer_size = 80;
     uint8_t char_counter = 0;
     char command[buffer_size];
