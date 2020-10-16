@@ -21,6 +21,7 @@
 #define RCV_HOST    HSPI_HOST
 #define DMA_CHAN    0
 
+float position = 0.0;
 
 void init_spi(){
     esp_err_t ret;
@@ -52,13 +53,13 @@ void encoder_task(){
     esp_err_t status;
     spi_slave_transaction_t spi_slv_transaction;
     init_spi();
-    WORD_ALIGNED_ATTR uint8_t recieve_buffer[80];
+    WORD_ALIGNED_ATTR uint8_t recieve_buffer[16];
     WORD_ALIGNED_ATTR uint8_t send_buffer[80];
-    memset(recieve_buffer,0, 80);
+    memset(recieve_buffer,0, 16);
     memset(&spi_slave_transmit, 0, sizeof(spi_slv_transaction));
 
     while(1){
-        memset(recieve_buffer, 0, 80);
+        memset(recieve_buffer, 0, 16);
         spi_slv_transaction.length = 16;
         spi_slv_transaction.rx_buffer = recieve_buffer;
         spi_slv_transaction.tx_buffer = send_buffer;
