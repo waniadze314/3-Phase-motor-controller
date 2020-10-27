@@ -4,18 +4,21 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
+#include "communiaction.h"
 
 #define UART_NUMBER UART_NUM_0
 #define RD_BUF_SIZE (80)
 static QueueHandle_t uart_queue;
 
-void init_uart();
-void parse_command(char* command);
+extern float D_KP;
+extern float D_KI;
 
-typedef enum{
-    write, read
-}operation;
+extern float Q_KP;
+extern float Q_KI;
 
+extern float KP;
+extern float KI;
+extern float KD;
 
 void init_uart(){
     uart_config_t uart_cfg = {
@@ -55,6 +58,139 @@ void parse_command(char* command){
     // uart_write_bytes(UART_NUMBER, (const char*) function, 2);
     printf("%c%c %d\n", function[0], function[1], num_value);
 	return;
+}
+
+void execute_command(char* function, int value, operation op){
+    switch(function[0]){
+	case 's':
+		switch(function[1]){
+		case 'c':
+			set_current(value);
+			break;
+
+		case 'a':
+			set_angle(value);
+			break;
+		}
+		break;
+	case 'B':
+		//begin_motion();
+		break;
+
+	case 'E':
+		//stop();
+		break;
+
+	case 'M':
+		switch(function[1]){
+		case 'L':
+			break;
+		case 'R':
+			break;
+		default:
+			//set_direction(none);
+			break;
+		}
+		break;
+
+	case 'P':
+		switch(function[1]){
+		case 'A':
+			if(op == read){
+				get_position_absolute();
+			}
+			else set_position_absolute(value);
+			break;
+		case 'R':
+			if(op == read){
+				get_position_relative();
+			}
+			else set_position_relative(value);
+			break;
+
+		}
+		break;
+
+	case 'K':
+		switch(function[1]){
+		case 'P':
+			if(op != read){
+				if(value != KP) set_KP(value);
+			}
+			else send_float_value(KP);
+			break;
+		case 'I':
+			if(op != read){
+				if(value != KI) set_KI(value);
+			}
+			else send_float_value(KI);
+			break;
+		case 'D':
+			if(op != read){
+				if(value != KD) set_KD(value);
+			}
+			else send_float_value(KD);
+			break;
+		default:
+			break;
+		}
+		break;
+
+	case 'D':
+		switch (function[1]) {
+		case 'P':
+			if(op != read){
+				if(value != D_KP) set_D_KP(value);
+			}
+			else send_float_value(D_KP);
+			break;
+		case 'I':
+			if(op != read){
+				if(value != D_KI) set_D_KI(value);
+			}
+			else send_float_value(D_KI);
+			break;
+		default:
+			break;
+		}
+		break;
+
+	case 'Q':
+		switch (function[1]) {
+		case 'P':
+			if(op != read){
+				if(value != Q_KP) set_Q_KP(value);
+			}
+			else send_float_value(Q_KP);
+			break;
+		case 'I':
+			if(op != read){
+				if(value != Q_KI) set_Q_KI(value);
+			}
+			else send_float_value(Q_KI);
+			break;
+		default:
+			break;
+		}
+		break;
+
+	case 'S':
+		switch(function[1]){
+		case 'S':
+			//set_speed(value);
+			break;
+		case 'P':
+			//set_position(value);
+			break;
+		}
+		break;
+	default:
+		// transmit_buffer_size = sprintf((char*)transmit_buffer,"Unknown Command\n");
+		// HAL_UART_Transmit(&huart3, transmit_buffer, transmit_buffer_size,100);;
+		break;
+	}
+        
+    }
 }
 
 void communication_task(){
