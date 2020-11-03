@@ -4,9 +4,17 @@
 
 #include "driver/mcpwm.h"
 #include "pwm.h"
+#include "foc.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "soc/mcpwm_periph.h"
+
+
+
+extern uint8_t commutation_established;
+extern float actual_phase_angle;
+extern float angle_error;
+extern float commanded_phase_angle;
 
 void init_pwm(){
     mcpwm_config_t pwm_config ={
@@ -44,5 +52,14 @@ void test_pwm(){
             mcpwm_set_duty(MCPWM_UNIT_0, MCPWM_TIMER_2, MCPWM_OPR_A, i+20);
             vTaskDelay(20/portTICK_RATE_MS);
         }
+    }
+}
+
+void pwm_task(){
+    if(commutation_established == 1){
+        angle_error = commanded_phase_angle - actual_phase_angle;
+        regulate_angle();
+        current_to_pwm_transform(regulate_DQ(), 2.0);
+        vTaskDelay(5/portTICK_RATE_MS);
     }
 }
