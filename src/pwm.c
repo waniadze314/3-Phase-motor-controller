@@ -59,7 +59,8 @@ void pwm_task(){
     if(commutation_established == 1){
         angle_error = commanded_phase_angle - actual_phase_angle;
         regulate_angle();
-        current_to_pwm_transform(regulate_DQ(), 2.0);
-        vTaskDelay(5/portTICK_RATE_MS);
+        current_to_pwm_transform(regulate_DQ(),2.0);
     }
+    vTaskDelay(CTRL_FREQ_MS/portTICK_RATE_MS);
+    
 }
