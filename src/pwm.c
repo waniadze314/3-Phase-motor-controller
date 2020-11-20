@@ -10,11 +10,12 @@
 #include "freertos/task.h"
 #include "soc/mcpwm_periph.h"
 
+
+
+extern uint8_t commutation_established;
+extern float actual_phase_angle;
 extern float angle_error;
 extern float commanded_phase_angle;
-extern float actual_phase_angle;
-extern uint8_t commutation_established;
-
 
 void init_pwm(){
     mcpwm_config_t pwm_config ={
