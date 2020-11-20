@@ -1,6 +1,7 @@
 #define PWM_U 12
 #define PWM_V 13
 #define PWM_W 14
+#define CTRL_FREQ_MS 10
 
 #include "driver/mcpwm.h"
 #include "pwm.h"
