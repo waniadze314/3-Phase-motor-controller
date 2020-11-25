@@ -61,6 +61,7 @@ void parse_command(char* command){
 }
 
 void execute_command(char* function, int value, operation op){
+    
 }
 
 void communication_task(){
