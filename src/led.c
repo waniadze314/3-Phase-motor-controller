@@ -12,7 +12,7 @@ void init_led_gpio(){
 void blink_led_task(){ 
     init_led_gpio();
     float blink_time_sec = 1.0;
-    int blink_time = (int)(blink_time*1000/portTICK_RATE_MS);
+    int blink_time = (int)(blink_time_sec*1000/portTICK_RATE_MS);
     while(1){
         gpio_set_level(GPIO_LED, 1);
         vTaskDelay(blink_time);
