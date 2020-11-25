@@ -56,7 +56,7 @@ void encoder_task(){
     WORD_ALIGNED_ATTR uint8_t recieve_buffer[16];
     WORD_ALIGNED_ATTR uint8_t send_buffer[80];
     memset(recieve_buffer,0, 16);
-    memset(&spi_slave_transmit, 0, sizeof(spi_slv_transaction));
+    memset(&spi_slv_transaction, 0, sizeof(spi_slv_transaction));
 
     while(1){
         memset(recieve_buffer, 0, 16);
