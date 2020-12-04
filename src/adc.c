@@ -67,7 +67,7 @@ void calculate_current_task(){
             actual_current[1] = (float)((adc_read[1]>>2) - ZERO_CURRENT)*CURRENT_SCALE_FACTOR;
             actual_current[2] = 0.0 - actual_current[0] - actual_current[1];
             
-            printf("U: %f V: %f W: %f\n", actual_current[0], actual_current[1], actual_current[2]);
+            // printf("U: %f V: %f W: %f\n", actual_current[0], actual_current[1], actual_current[2]);
             vTaskDelay(200/portTICK_RATE_MS);
         }   
     }

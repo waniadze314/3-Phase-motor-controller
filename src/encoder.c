@@ -53,17 +53,23 @@ void encoder_task(){
     esp_err_t status;
     spi_slave_transaction_t spi_slv_transaction;
     init_spi();
-    WORD_ALIGNED_ATTR uint8_t recieve_buffer[16];
-    WORD_ALIGNED_ATTR uint8_t send_buffer[80];
-    memset(recieve_buffer,0, 16);
+    WORD_ALIGNED_ATTR uint8_t recieve_buffer[32];
+    WORD_ALIGNED_ATTR char send_buffer[32];
+    memset(recieve_buffer,0, 32);
     memset(&spi_slv_transaction, 0, sizeof(spi_slv_transaction));
-
+    int position_base, encoder;
     while(1){
-        memset(recieve_buffer, 0, 16);
-        spi_slv_transaction.length = 16;
+        memset(recieve_buffer, 0, 32);
+        sprintf(send_buffer, "%d", 0);
+        spi_slv_transaction.length = 32;
         spi_slv_transaction.rx_buffer = recieve_buffer;
         spi_slv_transaction.tx_buffer = send_buffer;
         status = spi_slave_transmit(RCV_HOST, &spi_slv_transaction, portMAX_DELAY);
-        assert(status = ESP_OK);
+        assert(status == ESP_OK);
+
+        encoder = (256*recieve_buffer[2] + recieve_buffer[3])%10000;
+        position_base = 256*(int16_t)recieve_buffer[0] + (int16_t)recieve_buffer[1];
+        position_base +=  (encoder-(encoder%10000))/10000;
+        printf("Received_calc:%d.%d\n",position_base, encoder);
     }
 }

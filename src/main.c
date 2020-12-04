@@ -10,4 +10,5 @@ void app_main() {
     xTaskCreatePinnedToCore(communication_task, "COMMUNICATION", 4096, NULL, 0, NULL, 0);
     xTaskCreatePinnedToCore(encoder_task, "ENCODER", 4096, NULL, 0, NULL, 1);
     xTaskCreatePinnedToCore(blink_led_task, "LED", 4096, NULL, 1, NULL, 0);
+    xTaskCreatePinnedToCore(pwm_task, "PWM", 4096, NULL, 1, NULL, 1);
 }

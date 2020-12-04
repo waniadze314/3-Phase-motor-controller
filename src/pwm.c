@@ -1,6 +1,6 @@
-#define PWM_U 12
-#define PWM_V 13
-#define PWM_W 14
+#define PWM_U 25
+#define PWM_V 26
+#define PWM_W 27
 #define CTRL_FREQ_MS 10
 
 #include "driver/mcpwm.h"
@@ -57,11 +57,14 @@ void test_pwm(){
 }
 
 void pwm_task(){
-    if(commutation_established == 1){
-        angle_error = commanded_phase_angle - actual_phase_angle;
-        regulate_angle();
-        current_to_pwm_transform(regulate_DQ(),2.0);
-    }
-    vTaskDelay(CTRL_FREQ_MS/portTICK_RATE_MS);
-    
+    init_pwm();
+    while(1){
+        // if(commutation_established == 1){
+        if(true){
+            angle_error = commanded_phase_angle - actual_phase_angle;
+            regulate_angle();
+            current_to_pwm_transform(regulate_DQ(),2.0);
+        }
+        vTaskDelay(CTRL_FREQ_MS/portTICK_RATE_MS);
+    }   
 }
