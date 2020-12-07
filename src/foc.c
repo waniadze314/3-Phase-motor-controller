@@ -19,6 +19,16 @@ float commanded_phase_angle;
 float temp_phase_angle;
 float angle_step;
 
+float KP = 0.05;
+float KI = 0.0;
+float KD = 0.0;
+
+float D_KP = 0.6;
+float D_KI = 0.0;
+
+float Q_KP = 0.6;
+float Q_KI = 0.0;
+
 void establish_commutation(){
 	float phase_current[3];
 	float c = 0.1,p = 90.0;
@@ -72,9 +82,6 @@ float estimate_angle(){
 	return actual_phase_angle;
 }
 
-float KP = 0.05;
-float KI = 0.0;
-float KD = 0.0;
 void regulate_angle(){
 
 	static float integral_angle_error = 0.0;
@@ -101,12 +108,6 @@ void regulate_angle(){
 	temp_phase_angle += angle_step;
 	return;
 }
-
-float D_KP = 0.6;
-float D_KI = 0.0;
-
-float Q_KP = 0.6;
-float Q_KI = 0.0;
 
 
 float* regulate_DQ(){
@@ -136,4 +137,32 @@ float* regulate_DQ(){
 
 float angle_to_rad(float angle){
 	return (angle/180.0)*M_PI;
+}
+
+
+void set_KP(uint16_t value){
+	KP = (float)value/100.0;
+}
+
+void set_KI(uint16_t value){
+	KI = (float)value/100.0;
+}
+
+void set_KD(uint16_t value){
+	KD = (float)value/100.0;
+}
+
+void set_Q_KP(uint16_t value){
+	Q_KP = (float)value/100.0;
+}
+
+void set_Q_KI(uint16_t value){
+	Q_KI = (float)value/100.0;
+}
+void set_D_KP(uint16_t value){
+	D_KP = (float)value/100.0;
+}
+
+void set_D_KI(uint16_t value){
+	D_KI = (float)value/100.0;
 }

@@ -5,6 +5,8 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 #include "communiaction.h"
+#include "foc.h"
+#include "led.h"
 
 #define UART_NUMBER UART_NUM_0
 #define RD_BUF_SIZE (80)
@@ -19,6 +21,8 @@ extern float Q_KI;
 extern float KP;
 extern float KI;
 extern float KD;
+
+extern uint8_t blink_on;
 
 void init_uart(){
     uart_config_t uart_cfg = {
@@ -54,13 +58,61 @@ void parse_command(char* command){
 		}
 		num_value = atoi(value);
 	}
-	// execute_command(function, num_value, op);
+	execute_command(function, num_value, op);
     // uart_write_bytes(UART_NUMBER, (const char*) function, 2);
-    printf("%c%c %d\n", function[0], function[1], num_value);
+    // printf("%c%c %d\n", function[0], function[1], num_value);
 	return;
 }
 
 void execute_command(char* function, int value, operation op){
+    switch(function[0]){
+        case 'L':
+            if(function[1]=='O'){
+                toggle_blink(value);
+            }
+            break;
+
+        case 'E':
+            switch (function[1])
+            {
+            case 'C':
+                //establish_commutation();
+                printf("Establishing commutation\n");
+                break;
+            
+            default:
+                break;
+            }
+        case 'D':
+        switch(function[1]){
+            case 'P': set_D_KP(value);
+            break;
+            case 'I': set_D_KI(value);
+            break
+        }
+            break;
+
+        case 'Q':
+        switch(function[1]){
+            case 'P': set_Q_KP(value);
+            break;
+            case 'I': set_Q_KI(value);
+            break;
+        }
+            break;
+
+        case 'K':
+        switch(function[1]){
+            case 'P': set_KP(value);
+            break;
+            case 'I': set_KI(value);
+            break;
+            case 'D': set_KD(value);
+            break;
+        }
+            break;
+        default: break;        
+    }
 }
 
 void communication_task(){

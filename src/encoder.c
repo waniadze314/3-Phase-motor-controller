@@ -70,6 +70,6 @@ void encoder_task(){
         encoder = (256*recieve_buffer[2] + recieve_buffer[3])%10000;
         position_base = 256*(int16_t)recieve_buffer[0] + (int16_t)recieve_buffer[1];
         position_base +=  (encoder-(encoder%10000))/10000;
-        printf("Received_calc:%d.%d\n",position_base, encoder);
+        // printf("Received_calc:%d.%d\n",position_base, encoder);
     }
 }
